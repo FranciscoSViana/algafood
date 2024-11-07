@@ -16,6 +16,12 @@ import java.util.Optional;
 @Service
 public class CadastroCidadeService {
 
+    public static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
+    public static final String MSG_CIDADE_NAO_ENCONTRADA = "Não existe um cadastro de cidade com código %d";
+
+    @Autowired
+    private CadastroEstadoService cadastroEstadoService;
+
     @Autowired
     private CidadeRepository cidadeRepository;
 
@@ -32,12 +38,8 @@ public class CadastroCidadeService {
 
     public Cidade salvar(Cidade cidade) {
         Long estadoId = cidade.getEstado().getId();
-        Estado estado = estadoRepository.findById(estadoId).orElseThrow(() -> new EntidadeNaoEncontradaException(
-                String.format("Não existe cadastro de estado com código %d", estadoId)));
 
-        if (estado == null) {
-            throw new EntidadeNaoEncontradaException(String.format("Não existe cadastro de estado com código %d", estadoId));
-        }
+        Estado estado = cadastroEstadoService.buscarOuFalhar(estadoId);
 
         cidade.setEstado(estado);
 
@@ -47,12 +49,17 @@ public class CadastroCidadeService {
     public void excluir(Long cidadeId) {
         try {
             if (!cidadeRepository.existsById(cidadeId)) {
-                throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de cidade com código %d", cidadeId));
+                throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
             }
             cidadeRepository.deleteById(cidadeId);
 
         } catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(String.format("Cidade de código %d não pode ser removida, pois está em uso", cidadeId));
+            throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, cidadeId));
         }
+    }
+
+    public Cidade buscarOuFalhar(Long cidadeId) {
+        return cidadeRepository.findById(cidadeId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
     }
 }
