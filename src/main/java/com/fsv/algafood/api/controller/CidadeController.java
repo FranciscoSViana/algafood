@@ -1,6 +1,6 @@
 package com.fsv.algafood.api.controller;
 
-import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.fsv.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.fsv.algafood.domain.exception.NegocioException;
 import com.fsv.algafood.domain.model.Cidade;
 import com.fsv.algafood.domain.service.CadastroCidadeService;
@@ -33,8 +33,8 @@ public class CidadeController {
     public Cidade adicionar(@RequestBody Cidade cidade) {
         try {
             return cadastroCidadeService.salvar(cidade);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
@@ -46,8 +46,8 @@ public class CidadeController {
 
         try {
             return cadastroCidadeService.salvar(cidadeAtual);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.fsv.algafood.domain.service;
 
+import com.fsv.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.fsv.algafood.domain.exception.EntidadeEmUsoException;
 import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.model.Cidade;
@@ -17,7 +18,6 @@ import java.util.Optional;
 public class CadastroCidadeService {
 
     public static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
-    public static final String MSG_CIDADE_NAO_ENCONTRADA = "Não existe um cadastro de cidade com código %d";
 
     @Autowired
     private CadastroEstadoService cadastroEstadoService;
@@ -49,7 +49,7 @@ public class CadastroCidadeService {
     public void excluir(Long cidadeId) {
         try {
             if (!cidadeRepository.existsById(cidadeId)) {
-                throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
+                throw new CidadeNaoEncontradaException(cidadeId);
             }
             cidadeRepository.deleteById(cidadeId);
 
@@ -60,6 +60,6 @@ public class CadastroCidadeService {
 
     public Cidade buscarOuFalhar(Long cidadeId) {
         return cidadeRepository.findById(cidadeId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
+                .orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
     }
 }

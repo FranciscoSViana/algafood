@@ -1,13 +1,12 @@
 package com.fsv.algafood.domain.service;
 
 import com.fsv.algafood.domain.exception.EntidadeEmUsoException;
-import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.fsv.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.fsv.algafood.domain.model.Estado;
 import com.fsv.algafood.domain.repository.CidadeRepository;
 import com.fsv.algafood.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,6 @@ import java.util.Optional;
 public class CadastroEstadoService {
 
     public static final String MSG_ESTADO_EM_USO = "Estado de código %d não pode ser removida, pois está em uso";
-    public static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe um cadastro de estado com código %d";
 
     @Autowired
     private CidadeRepository cidadeRepository;
@@ -40,7 +38,7 @@ public class CadastroEstadoService {
     public void excluir(Long estadoId) {
         try {
             if (!estadoRepository.existsById(estadoId)) {
-                throw new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
+                throw new EstadoNaoEncontradoException(estadoId);
             }
             estadoRepository.deleteById(estadoId);
         } catch (DataIntegrityViolationException e) {
@@ -48,8 +46,8 @@ public class CadastroEstadoService {
         }
     }
 
-    public  Estado buscarOuFalhar(Long estadoId) {
+    public Estado buscarOuFalhar(Long estadoId) {
         return estadoRepository.findById(estadoId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
+                .orElseThrow(() -> new EstadoNaoEncontradoException(estadoId));
     }
 }

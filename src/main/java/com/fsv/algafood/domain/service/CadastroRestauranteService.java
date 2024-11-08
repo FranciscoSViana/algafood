@@ -1,6 +1,7 @@
 package com.fsv.algafood.domain.service;
 
 import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.fsv.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.fsv.algafood.domain.model.Cozinha;
 import com.fsv.algafood.domain.model.Restaurante;
 import com.fsv.algafood.domain.repository.CozinhaRepository;
@@ -13,8 +14,6 @@ import java.util.Optional;
 
 @Service
 public class CadastroRestauranteService {
-
-    public static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não existe um cadastro de cozinha com código %d";
 
     @Autowired
     private CadastroCozinhaService cadastroCozinhaService;
@@ -45,6 +44,6 @@ public class CadastroRestauranteService {
 
     public Restaurante buscarOuFalhar(Long restauranteId) {
         return restauranteRepository.findById(restauranteId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
+                .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
     }
 }

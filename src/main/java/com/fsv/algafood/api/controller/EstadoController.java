@@ -50,7 +50,7 @@ public class EstadoController {
         try {
             return cadastroEstadoService.salvar(estadoAtual);
         } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 

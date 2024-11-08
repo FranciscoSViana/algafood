@@ -38,7 +38,7 @@ public class CozinhaController {
         try {
             return cadastroCozinhaService.salvar(cozinha);
         } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
@@ -51,7 +51,7 @@ public class CozinhaController {
         try {
             return cadastroCozinhaService.salvar(cozinhaAtual);
         } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 

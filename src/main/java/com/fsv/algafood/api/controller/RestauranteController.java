@@ -1,6 +1,7 @@
 package com.fsv.algafood.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fsv.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.exception.NegocioException;
 import com.fsv.algafood.domain.model.Restaurante;
@@ -37,8 +38,8 @@ public class RestauranteController {
     public Restaurante adicionar(@RequestBody Restaurante restaurante) {
         try {
             return cadastroRestauranteService.salvar(restaurante);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+        } catch (CozinhaNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
@@ -51,8 +52,8 @@ public class RestauranteController {
 
         try {
             return cadastroRestauranteService.salvar(restauranteAtual);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+        } catch (CozinhaNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 

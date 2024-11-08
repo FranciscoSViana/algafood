@@ -1,5 +1,6 @@
 package com.fsv.algafood.domain.service;
 
+import com.fsv.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.fsv.algafood.domain.exception.EntidadeEmUsoException;
 import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.model.Cozinha;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class CadastroCozinhaService {
 
     public static final String MSG_COZINHA_EM_USO = "Cozinha de código %d não pode ser removida, pois está em uso";
-    public static final String MSG_COZINHA_NAO_ENCONTRADA = "Não existe um cadastro de cozinha com código %d";
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
@@ -24,7 +24,7 @@ public class CadastroCozinhaService {
     public void excluir(Long cozinhaId) {
         try {
             if (!cozinhaRepository.existsById(cozinhaId)) {
-                throw new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId));
+                throw new CozinhaNaoEncontradaException(cozinhaId);
             }
             cozinhaRepository.deleteById(cozinhaId);
 
@@ -35,6 +35,6 @@ public class CadastroCozinhaService {
 
     public Cozinha buscarOuFalhar(Long cozinhaId) {
         return cozinhaRepository.findById(cozinhaId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));
+                .orElseThrow(() -> new CozinhaNaoEncontradaException(cozinhaId));
     }
 }
