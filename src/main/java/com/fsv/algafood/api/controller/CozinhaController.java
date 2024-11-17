@@ -5,6 +5,7 @@ import com.fsv.algafood.domain.exception.NegocioException;
 import com.fsv.algafood.domain.model.Cozinha;
 import com.fsv.algafood.domain.repository.CozinhaRepository;
 import com.fsv.algafood.domain.service.CadastroCozinhaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha adicionar(@RequestBody Cozinha cozinha) {
+    public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha) {
         try {
             return cadastroCozinhaService.salvar(cozinha);
         } catch (EntidadeNaoEncontradaException e) {
@@ -43,7 +44,7 @@ public class CozinhaController {
     }
 
     @PutMapping("/{cozinhaId}")
-    public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+    public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha) {
         Cozinha cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
 
         BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
