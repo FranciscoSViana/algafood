@@ -2,7 +2,6 @@ package com.fsv.algafood.domain.service;
 
 import com.fsv.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.fsv.algafood.domain.exception.EntidadeEmUsoException;
-import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.model.Cozinha;
 import com.fsv.algafood.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;

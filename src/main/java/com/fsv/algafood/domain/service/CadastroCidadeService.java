@@ -2,7 +2,6 @@ package com.fsv.algafood.domain.service;
 
 import com.fsv.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.fsv.algafood.domain.exception.EntidadeEmUsoException;
-import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.model.Cidade;
 import com.fsv.algafood.domain.model.Estado;
 import com.fsv.algafood.domain.repository.CidadeRepository;

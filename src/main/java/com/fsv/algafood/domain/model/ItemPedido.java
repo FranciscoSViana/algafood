@@ -20,6 +20,7 @@ public class ItemPedido {
     private BigDecimal precoUnitario;
 
     private BigDecimal precoTotal;
+
     private Integer quantidade;
 
     private String observacao;

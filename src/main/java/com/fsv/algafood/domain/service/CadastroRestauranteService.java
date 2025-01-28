@@ -1,6 +1,5 @@
 package com.fsv.algafood.domain.service;
 
-import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.fsv.algafood.domain.model.Cozinha;
 import com.fsv.algafood.domain.model.Restaurante;

@@ -5,7 +5,6 @@ import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.BeanUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 
 public class ValorZeroIncluiDescricaoValidator implements ConstraintValidator<ValorZeroIncluiDescricao, Object> {
@@ -31,7 +30,7 @@ public class ValorZeroIncluiDescricaoValidator implements ConstraintValidator<Va
             String descricao = (String) BeanUtils.getPropertyDescriptor(o.getClass(), descricaoField)
                     .getReadMethod().invoke(o);
 
-            if (valor != null & BigDecimal.ZERO.compareTo(valor) == 0 && descricao != null) {
+            if (valor != null && BigDecimal.ZERO.compareTo(valor) == 0 && descricao != null) {
                 valido = descricao.toLowerCase().contains(this.descricaoObrigatoria.toLowerCase());
             }
 

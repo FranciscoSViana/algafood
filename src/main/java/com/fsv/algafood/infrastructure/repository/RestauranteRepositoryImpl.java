@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.fsv.algafood.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;

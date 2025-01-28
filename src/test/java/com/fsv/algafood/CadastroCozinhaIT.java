@@ -6,7 +6,6 @@ import com.fsv.algafood.util.DatabaseCleaner;
 import com.fsv.algafood.util.ResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ class CadastroCozinhaIT {
 
     private static final int COZINHA_ID_INEXISTENTE = 100;
 
-    private Cozinha cozinhaAmericana;
     private int quantidadeCozinhasCadastradas;
     private String jsonCorretoCozinhaChinesa;
 

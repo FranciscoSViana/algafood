@@ -17,8 +17,8 @@ import java.util.List;
 public class Cozinha {
 
     @Id
-    @NotNull(groups = Groups.CozinhaId.class)
     @EqualsAndHashCode.Include
+    @NotNull(groups = Groups.CozinhaId.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -26,7 +26,6 @@ public class Cozinha {
     @Column(nullable = false)
     private String nome;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "cozinha")
     private List<Restaurante> restaurantes = new ArrayList<>();
 }

@@ -94,18 +94,18 @@ public class CadastroRestauranteIT {
             .statusCode(HttpStatus.CREATED.value());
     }
 
-//    @Test
-//    public void deveRetornarStatus400_QuandoCadastrarRestauranteSemTaxaFrete() {
-//        given()
-//            .body(jsonRestauranteSemFrete)
-//            .contentType(ContentType.JSON)
-//            .accept(ContentType.JSON)
-//        .when()
-//            .post()
-//        .then()
-//            .statusCode(HttpStatus.BAD_REQUEST.value())
-//            .body("title", equalTo(DADOS_INVALIDOS_PROBLEM_TITLE));
-//    }
+    @Test
+    public void deveRetornarStatus400_QuandoCadastrarRestauranteSemTaxaFrete() {
+        given()
+            .body(jsonRestauranteSemFrete)
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+        .when()
+            .post()
+        .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("title", equalTo(DADOS_INVALIDOS_PROBLEM_TITLE));
+    }
 
     @Test
     public void deveRetornarStatus400_QuandoCadastrarRestauranteSemCozinha() {
