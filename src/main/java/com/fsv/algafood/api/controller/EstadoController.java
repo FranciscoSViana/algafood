@@ -1,15 +1,17 @@
 package com.fsv.algafood.api.controller;
 
-import com.fsv.algafood.domain.exception.EntidadeEmUsoException;
+import com.fsv.algafood.api.assembler.EstadoInputDisassembler;
+import com.fsv.algafood.api.assembler.EstadoModelAssembler;
+import com.fsv.algafood.api.model.EstadoModel;
+import com.fsv.algafood.api.model.input.EstadoInput;
 import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.exception.NegocioException;
 import com.fsv.algafood.domain.model.Estado;
+import com.fsv.algafood.domain.repository.EstadoRepository;
 import com.fsv.algafood.domain.service.CadastroEstadoService;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,35 +23,49 @@ public class EstadoController {
     @Autowired
     private CadastroEstadoService cadastroEstadoService;
 
+    @Autowired
+    private EstadoRepository estadoRepository;
+
+    @Autowired
+    private EstadoInputDisassembler estadoInputDisassembler;
+
+    @Autowired
+    EstadoModelAssembler estadoModelAssembler;
+
     @GetMapping
-    public List<Estado> listar() {
-        return cadastroEstadoService.listar();
+    public List<EstadoModel> listar() {
+        return estadoModelAssembler.toCollectionModel(estadoRepository.findAll());
     }
 
     @GetMapping("/{estadoId}")
-    public Estado buscar(@PathVariable Long estadoId) {
-        return cadastroEstadoService.buscarOuFalhar(estadoId);
+    public EstadoModel buscar(@PathVariable Long estadoId) {
+        Estado estado = cadastroEstadoService.buscarOuFalhar(estadoId);
+
+        return estadoModelAssembler.toModel(estado);
     }
 
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody @Valid Estado estado) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public EstadoModel adicionar(@RequestBody @Valid EstadoInput estadoInput) {
         try {
-            estado = cadastroEstadoService.salvar(estado);
+            Estado estado = estadoInputDisassembler.toDomainObject(estadoInput);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(estado);
+            return estadoModelAssembler.toModel(cadastroEstadoService.salvar(estado));
         } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{estadoId}")
-    public Estado atualizar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
+    public EstadoModel atualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInput estadoInput) {
         Estado estadoAtual = cadastroEstadoService.buscarOuFalhar(estadoId);
 
-        BeanUtils.copyProperties(estado, estadoAtual, "id");
+//        BeanUtils.copyProperties(estado, estadoAtual, "id");
+
+        estadoInputDisassembler.copyToDomainObject(estadoInput, estadoAtual);
 
         try {
-            return cadastroEstadoService.salvar(estadoAtual);
+            return estadoModelAssembler.toModel(cadastroEstadoService.salvar(estadoAtual));
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
