@@ -6,6 +6,7 @@ import com.fsv.algafood.api.assembler.PedidoResumoModelAssembler;
 import com.fsv.algafood.api.model.PedidoModel;
 import com.fsv.algafood.api.model.PedidoResumoModel;
 import com.fsv.algafood.api.model.input.PedidoInput;
+import com.fsv.algafood.api.openapi.controller.PedidoControllerOpenApi;
 import com.fsv.algafood.core.data.PageableTranslator;
 import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.exception.NegocioException;
@@ -16,6 +17,8 @@ import com.fsv.algafood.domain.filter.PedidoFilter;
 import com.fsv.algafood.domain.service.EmissaoPedidoService;
 import com.fsv.algafood.infrastructure.repository.spec.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +32,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/pedidos")
-public class PedidoController {
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -66,6 +69,9 @@ public class PedidoController {
 //    }
 
     @GetMapping
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula", name = "campos", paramType = "query", type = "string")
+    })
     public Page<PedidoResumoModel> pesquisar(PedidoFilter filter, @PageableDefault(size = 10) Pageable pageable) {
         pageable = traduzirPageable(pageable);
         Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filter), pageable);
@@ -78,6 +84,9 @@ public class PedidoController {
     }
 
     @GetMapping("/{codigoPedido}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula", name = "campos", paramType = "query", type = "string")
+    })
     public PedidoModel buscar(@PathVariable String codigoPedido) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
 

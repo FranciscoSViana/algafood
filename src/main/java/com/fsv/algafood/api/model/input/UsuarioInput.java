@@ -1,5 +1,7 @@
 package com.fsv.algafood.api.model.input;
 
+import io.swagger.annotations.ApiModelProperty;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +11,11 @@ import lombok.Setter;
 public class UsuarioInput {
 
     @NotBlank
+    @ApiModelProperty(example = "João da Silva", required = true)
     private String nome;
 
+    @Email
     @NotBlank
+    @ApiModelProperty(example = "joao.ger@algafood.com.br", required = true)
     private String email;
 }

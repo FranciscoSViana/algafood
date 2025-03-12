@@ -1,5 +1,6 @@
 package com.fsv.algafood.api.controller;
 
+import com.fsv.algafood.api.openapi.controller.EstatisticasControllerOpenApi;
 import com.fsv.algafood.domain.filter.VendaDiariaFilter;
 import com.fsv.algafood.domain.model.dto.VendaDiaria;
 import com.fsv.algafood.domain.service.VendaQueryService;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/estatisticas")
-public class EstatisticasController {
+public class EstatisticasController implements EstatisticasControllerOpenApi {
 
     @Autowired
     private VendaQueryService vendaQueryService;

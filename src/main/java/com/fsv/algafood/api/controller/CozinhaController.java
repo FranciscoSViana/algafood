@@ -4,6 +4,7 @@ import com.fsv.algafood.api.assembler.CozinhaInputDisassembler;
 import com.fsv.algafood.api.assembler.CozinhaModelAssembler;
 import com.fsv.algafood.api.model.CozinhaModel;
 import com.fsv.algafood.api.model.input.CozinhaInput;
+import com.fsv.algafood.api.openapi.controller.CozinhaControllerOpenApi;
 import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.exception.NegocioException;
 import com.fsv.algafood.domain.model.Cozinha;
@@ -15,13 +16,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/cozinhas")
-public class CozinhaController {
+@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CozinhaController implements CozinhaControllerOpenApi {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
@@ -35,7 +37,7 @@ public class CozinhaController {
     @Autowired
     private CozinhaModelAssembler cozinhaModelAssembler;
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<CozinhaModel> listar(Pageable pageable) {
         Page<Cozinha> cozinhas = cozinhaRepository.findAll(pageable);
 
@@ -46,15 +48,15 @@ public class CozinhaController {
         return cozinhasModelPage;
     }
 
-    @GetMapping("/{cozinhaId}")
+    @GetMapping(value = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CozinhaModel buscar(@PathVariable Long cozinhaId) {
         Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
 
         return cozinhaModelAssembler.toModel(cozinha);
     }
 
-    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
         try {
             Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
@@ -65,7 +67,7 @@ public class CozinhaController {
         }
     }
 
-    @PutMapping("/{cozinhaId}")
+    @PutMapping(value = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CozinhaModel atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaInput cozinhaInput) {
         Cozinha cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
 
@@ -79,8 +81,8 @@ public class CozinhaController {
         }
     }
 
-    @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping(value = "/{cozinhaId}", produces = {})
     public void remover(@PathVariable Long cozinhaId) {
         cadastroCozinhaService.excluir(cozinhaId);
     }

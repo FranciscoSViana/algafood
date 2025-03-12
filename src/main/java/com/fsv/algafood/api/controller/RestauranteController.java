@@ -8,6 +8,8 @@ import com.fsv.algafood.api.assembler.RestauranteModelAssembler;
 import com.fsv.algafood.api.model.RestauranteModel;
 import com.fsv.algafood.api.model.input.RestauranteInput;
 import com.fsv.algafood.api.model.view.RestauranteView;
+import com.fsv.algafood.api.openapi.controller.RestauranteControllerOpenApi;
+import com.fsv.algafood.api.openapi.model.RestauranteBasicoModelOpenApi;
 import com.fsv.algafood.core.validation.ValidacaoException;
 import com.fsv.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.fsv.algafood.domain.exception.CozinhaNaoEncontradaException;
@@ -16,11 +18,15 @@ import com.fsv.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.fsv.algafood.domain.model.Restaurante;
 import com.fsv.algafood.domain.repository.RestauranteRepository;
 import com.fsv.algafood.domain.service.CadastroRestauranteService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
@@ -33,8 +39,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/restaurantes")
-public class RestauranteController {
+@RequestMapping(value = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteController implements RestauranteControllerOpenApi {
 
     @Autowired
     private RestauranteRepository restauranteRepository;
@@ -69,21 +75,26 @@ public class RestauranteController {
 //        return restaurantesWrapper;
 //    }
 
+    @JsonView(RestauranteView.ApenasNome.class)
+    @GetMapping(params = "projecao=apenas-nome")
+    public List<RestauranteModel> listarApenasNomes() {
+        return listar();
+    }
+
     @GetMapping
     @JsonView(RestauranteView.Resumo.class)
+    @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome",name = "projecao", paramType = "query", type = "string")
+    })
     public List<RestauranteModel> listar() {
         return restauranteModelAssembler.toCollectionModel(restauranteRepository.findAll());
     }
 
-    @JsonView(RestauranteView.ApenasNome.class)
-    @GetMapping(params = "projecao=apenas-nome")
-    public List<RestauranteModel> listarResumido() {
-        return listar();
-    }
-//
-//    @GetMapping(params = "projecao=apenas-nome")
 //    @JsonView(RestauranteView.ApenasNome.class)
-//    public List<RestauranteModel> listarApenasNome() {
+//    @GetMapping(params = "projecao=apenas-nome")
+//    @ApiOperation(value = "Lista restaurantes", hidden = true)
+//    public List<RestauranteModel> listarResumido() {
 //        return listar();
 //    }
 

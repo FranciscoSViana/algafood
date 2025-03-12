@@ -2,17 +2,19 @@ package com.fsv.algafood.api.controller;
 
 import com.fsv.algafood.api.assembler.UsuarioModelAssembler;
 import com.fsv.algafood.api.model.UsuarioModel;
+import com.fsv.algafood.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import com.fsv.algafood.domain.model.Restaurante;
 import com.fsv.algafood.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/restaurantes/{restauranteId}/responsaveis")
-public class RestauranteUsuarioResponsavelController {
+@RequestMapping(value = "/restaurantes/{restauranteId}/responsaveis", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteUsuarioResponsavelController implements RestauranteUsuarioResponsavelControllerOpenApi {
 
     @Autowired
     private CadastroRestauranteService cadastroRestauranteService;

@@ -4,6 +4,7 @@ import com.fsv.algafood.api.assembler.EstadoInputDisassembler;
 import com.fsv.algafood.api.assembler.EstadoModelAssembler;
 import com.fsv.algafood.api.model.EstadoModel;
 import com.fsv.algafood.api.model.input.EstadoInput;
+import com.fsv.algafood.api.openapi.controller.EstadoControllerOpenApi;
 import com.fsv.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.fsv.algafood.domain.exception.NegocioException;
 import com.fsv.algafood.domain.model.Estado;
@@ -12,13 +13,14 @@ import com.fsv.algafood.domain.service.CadastroEstadoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/estados")
-public class EstadoController {
+@RequestMapping(value = "/estados", produces = MediaType.APPLICATION_JSON_VALUE)
+public class EstadoController implements EstadoControllerOpenApi {
 
     @Autowired
     private CadastroEstadoService cadastroEstadoService;

@@ -6,19 +6,21 @@ import com.fsv.algafood.api.model.UsuarioModel;
 import com.fsv.algafood.api.model.input.SenhaInput;
 import com.fsv.algafood.api.model.input.UsuarioComSenhaInput;
 import com.fsv.algafood.api.model.input.UsuarioInput;
+import com.fsv.algafood.api.openapi.controller.UsuarioControllerOpenApi;
 import com.fsv.algafood.domain.model.Usuario;
 import com.fsv.algafood.domain.repository.UsuarioRepository;
 import com.fsv.algafood.domain.service.CadastroUsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/usuarios")
-public class UsuarioController {
+@RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsuarioController implements UsuarioControllerOpenApi {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
