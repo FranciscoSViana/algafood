@@ -1,5 +1,6 @@
 package com.fsv.algafood.api.controller;
 
+import com.fsv.algafood.api.AlgaLinks;
 import com.fsv.algafood.api.assembler.ProdutoInputDisassembler;
 import com.fsv.algafood.api.assembler.ProdutoModelAssembler;
 import com.fsv.algafood.api.model.ProdutoModel;
@@ -12,6 +13,7 @@ import com.fsv.algafood.domain.service.CadastroProdutoService;
 import com.fsv.algafood.domain.service.CadastroRestauranteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -23,22 +25,26 @@ import java.util.List;
 public class RestauranteProdutoController implements RestauranteProdutoControllerOpenApi {
 
     @Autowired
+    private AlgaLinks algaLinks;
+
+    @Autowired
     private ProdutoRepository produtoRepository;
-
-    @Autowired
-    private CadastroProdutoService cadastroProdutoService;
-
-    @Autowired
-    private CadastroRestauranteService cadastroRestauranteService;
 
     @Autowired
     private ProdutoModelAssembler produtoModelAssembler;
 
     @Autowired
+    private CadastroProdutoService cadastroProdutoService;
+
+    @Autowired
     private ProdutoInputDisassembler produtoInputDisassembler;
 
+    @Autowired
+    private CadastroRestauranteService cadastroRestauranteService;
+
+    @Override
     @GetMapping
-    public List<ProdutoModel> listar(@PathVariable Long restauranteId, @RequestParam(required = false) boolean incluirInativos) {
+    public CollectionModel<ProdutoModel> listar(@PathVariable Long restauranteId, @RequestParam(required = false, defaultValue = "false") Boolean incluirInativos) {
         Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
         List<Produto> produtos = null;
 
@@ -47,7 +53,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         } else {
             produtos = produtoRepository.findAtivosByRestaurante(restaurante);
         }
-        return produtoModelAssembler.toCollectionModel(produtos);
+        return produtoModelAssembler.toCollectionModel(produtos).add(algaLinks.linkToProdutos(restauranteId));
     }
 
     @GetMapping("/{produtoId}")

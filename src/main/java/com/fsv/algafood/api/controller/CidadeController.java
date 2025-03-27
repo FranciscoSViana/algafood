@@ -1,10 +1,11 @@
 package com.fsv.algafood.api.controller;
 
+import com.fsv.algafood.api.ResourceUriHelper;
 import com.fsv.algafood.api.assembler.CidadeInputDisassembler;
 import com.fsv.algafood.api.assembler.CidadeModelAssembler;
-import com.fsv.algafood.api.openapi.controller.CidadeControllerOpenApi;
 import com.fsv.algafood.api.model.CidadeModel;
 import com.fsv.algafood.api.model.input.CidadeInput;
+import com.fsv.algafood.api.openapi.controller.CidadeControllerOpenApi;
 import com.fsv.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.fsv.algafood.domain.exception.NegocioException;
 import com.fsv.algafood.domain.model.Cidade;
@@ -12,11 +13,10 @@ import com.fsv.algafood.domain.repository.CidadeRepository;
 import com.fsv.algafood.domain.service.CadastroCidadeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,7 +35,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeInputDisassembler cidadeInputDisassembler;
 
     @GetMapping
-    public List<CidadeModel> listar() {
+    public CollectionModel<CidadeModel> listar() {
         return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll());
     }
 
@@ -52,7 +52,11 @@ public class CidadeController implements CidadeControllerOpenApi {
         try {
             Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
 
-            return cidadeModelAssembler.toModel(cadastroCidadeService.salvar(cidade));
+            CidadeModel cidadeModel = cidadeModelAssembler.toModel(cadastroCidadeService.salvar(cidade));
+
+            ResourceUriHelper.addUriResponseHeader(cidadeModel.getId());
+
+            return cidadeModel;
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }

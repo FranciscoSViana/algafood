@@ -1,5 +1,6 @@
 package com.fsv.algafood.api.openapi.controller;
 
+import com.fsv.algafood.api.controller.EstatisticasController;
 import com.fsv.algafood.domain.filter.VendaDiariaFilter;
 import com.fsv.algafood.domain.model.dto.VendaDiaria;
 import io.swagger.annotations.ApiImplicitParam;
@@ -11,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface EstatisticasControllerOpenApi {
+
+    @ApiOperation(value = "Estatísticas", hidden = true)
+    EstatisticasController.EstatisticasModel estatisticas();
 
     @ApiOperation("Consulta estatísticas de vendas diárias")
     @ApiImplicitParams({

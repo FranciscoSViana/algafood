@@ -4,14 +4,13 @@ import com.fsv.algafood.api.exceptionhandler.Problem;
 import com.fsv.algafood.api.model.CidadeModel;
 import com.fsv.algafood.api.model.input.CidadeInput;
 import io.swagger.annotations.*;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "cidades")
 public interface CidadeControllerOpenApi {
 
     @ApiOperation("Lista as cidades")
-    List<CidadeModel> listar();
+    CollectionModel<CidadeModel> listar();
 
     @ApiOperation("Busca uma cidade por ID")
     @ApiResponses({

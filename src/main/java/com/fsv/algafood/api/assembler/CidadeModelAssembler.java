@@ -1,27 +1,44 @@
 package com.fsv.algafood.api.assembler;
 
+import com.fsv.algafood.api.AlgaLinks;
+import com.fsv.algafood.api.controller.CidadeController;
 import com.fsv.algafood.api.model.CidadeModel;
 import com.fsv.algafood.domain.model.Cidade;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
-public class CidadeModelAssembler {
+public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Cidade, CidadeModel> {
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public CidadeModel toModel(Cidade cidade) {
-        return modelMapper.map(cidade, CidadeModel.class);
+    @Autowired
+    private AlgaLinks algaLinks;
+
+    public CidadeModelAssembler() {
+        super(CidadeController.class, CidadeModel.class);
     }
 
-    public List<CidadeModel> toCollectionModel(List<Cidade> cidades) {
-        return cidades.stream()
-                .map(this::toModel)
-                .collect(Collectors.toList());
+    @Override
+    public CidadeModel toModel(Cidade cidade) {
+
+        CidadeModel cidadeModel = createModelWithId(cidade.getId(), cidade);
+
+        modelMapper.map(cidade, cidadeModel);
+
+        cidadeModel.add(algaLinks.linkToCidades("cidades"));
+
+        cidadeModel.getEstado().add(algaLinks.linkToEstado(cidadeModel.getEstado().getId()));
+
+        return cidadeModel;
+    }
+
+    @Override
+    public CollectionModel<CidadeModel> toCollectionModel(Iterable<? extends Cidade> entities) {
+        return super.toCollectionModel(entities).add(algaLinks.linkToCidades());
     }
 }
