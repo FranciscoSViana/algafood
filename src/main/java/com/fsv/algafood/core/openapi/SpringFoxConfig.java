@@ -46,7 +46,7 @@ import java.util.function.Consumer;
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SpringFoxConfig implements WebMvcConfigurer {
 
-//    @Bean
+    @Bean
     public Docket apiDocketV1() {
 
         var typeResolver = new TypeResolver();
